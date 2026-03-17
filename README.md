@@ -2,42 +2,45 @@
 
 ## 🚀 Overview
 
-This project is an AI-powered PDF Question Answering system that allows users to upload a PDF document and ask questions based on its content.
+This project is an AI-powered PDF Question Answering system that allows users to upload any PDF document and ask questions based on its content.
 
-The system uses **vector embeddings and semantic search** to retrieve the most relevant information from the document and display accurate answers.
+The system uses **vector embeddings and semantic search** to retrieve relevant information and generate concise answers.
 
 ---
 
 ## 🎯 Problem Statement
 
 Reading large PDF documents manually is time-consuming and inefficient.
-This project solves that by enabling **intelligent document search using AI**.
+
+This project solves that by enabling:
+
+- Intelligent document understanding
+- Fast question answering
+- Context-based retrieval using AI
 
 ---
 
-## 🧠 How It Works
+## 🧠 Solution Approach
+
+This project implements a **basic Retrieval-Augmented Generation (RAG)** pipeline:
 
 1. 📄 Upload PDF
-2. ✂️ Split text into chunks
-3. 🔢 Convert text into vector embeddings
-4. ❓ Convert user question into embedding
-5. 🔍 Perform similarity search
-6. 📌 Return top relevant answers
-
-Additionally:
-
-- ✅ Keyword-based matching improves accuracy
-- ✅ Semantic search ensures better context understanding
+2. ✂️ Extract text from PDF
+3. 🔢 Convert text into embeddings
+4. 📦 Store embeddings in vector store
+5. ❓ Convert user question into embedding
+6. 🔍 Perform similarity search
+7. 📌 Retrieve context and generate answer
 
 ---
 
 ## ⚙️ Tech Stack
 
 - Python
-- Streamlit (UI)
-- Sentence Transformers (Embeddings)
+- Streamlit
+- Sentence Transformers
 - NumPy
-- LangChain (Document Processing)
+- PyPDF2
 
 ---
 
@@ -45,23 +48,75 @@ Additionally:
 
 - 📂 Upload any PDF
 - ❓ Ask questions from document
-- 📊 Top 3 relevant answers with similarity score
-- 🔍 Hybrid search (Keyword + Semantic)
+- 🔍 Semantic search-based retrieval
+- 📌 Context-based answer generation
 - 📝 Document summarization
+- ⚡ Fast and lightweight
 
 ---
 
-## 🗂️ Project Structure
+## 🏗️ Project Structure
 
-```
+```bash
 endee-rag-project/
 │
-├── app.py                # Streamlit UI
-├── rag_pipeline.py       # Core AI logic
-├── requirements.txt      # Dependencies
-├── README.md             # Project documentation
-├── data/                 # Optional data folder
-└── endee/                # Forked Endee repository
+├── app.py
+├── rag_pipeline.py
+├── endee_db.py
+├── requirements.txt
+├── README.md
+├── endee/   # Forked Endee repository
+```
+
+---
+
+## 🏗️ System Architecture
+
+```
+PDF → Text Extraction → Chunking → Embeddings
+→ Vector Storage → Query Embedding
+→ Similarity Search → Context → Answer Generation
+```
+
+---
+
+## 🔗 Endee Integration
+
+This project is aligned with the concept of using a vector database like **Endee**.
+
+Currently:
+
+- A simple in-memory vector store is used
+- Embeddings are stored and retrieved for similarity search
+
+In real-world applications, Endee can be used to:
+
+- Store large-scale embeddings
+- Perform fast similarity search
+- Improve scalability and performance
+
+---
+
+## ▶️ How to Run
+
+```bash
+# Clone repository
+git clone https://github.com/43mohammed-umar/endee-rag-project
+
+# Navigate to folder
+cd endee-rag-project
+
+# Create virtual environment
+python -m venv venv
+
+# Activate environment
+venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run application
+streamlit run app.py
 ```
 
 ---
@@ -69,59 +124,29 @@ endee-rag-project/
 ## 🧪 Example
 
 **Question:**
-Who is the project guide?
+What skills are mentioned?
 
 **Answer:**
-Dr. S. Shabana Begum
+Python, SQL, Machine Learning, etc.
 
 ---
 
-## 🔗 Endee Integration (Conceptual)
+## 🔮 Future Improvements
 
-This project demonstrates how vector-based search works.
-In real-world applications, tools like **Endee Vector Database** can be used to:
-
-- Store embeddings efficiently
-- Perform fast similarity search
-- Scale to large datasets
-
----
-
-## ▶️ How to Run
-
-```bash
-# Step 1: Clone repository
-git clone https://github.com/43mohammed-umar/endee
-
-# Step 2: Navigate to project folder
-cd endee-rag-project
-
-# Step 3: Create virtual environment
-python -m venv venv
-
-# Step 4: Activate environment
-venv\Scripts\activate
-
-# Step 5: Install dependencies
-pip install -r requirements.txt
-
-# Step 6: Run application
-streamlit run app.py
-```
-
----
-
-## 📌 Future Improvements
-
-- Integration with Endee vector database
-- LLM-based answer generation (OpenAI / ChatGPT)
+- Full Endee vector database integration
+- LLM-based answer generation
 - Multi-document support
-- Improved UI/UX
+- Chat-based interface
+- Deployment
 
 ---
 
 ## 🙌 Conclusion
 
-This project demonstrates a practical implementation of **Retrieval-Augmented Generation (RAG)** using vector embeddings and hybrid search techniques.
+This project demonstrates how AI can transform static PDF documents into interactive systems using semantic search and RAG.
 
-It showcases how AI can make document interaction faster, smarter, and more efficient.
+It highlights core AI concepts such as:
+
+- Embeddings
+- Vector search
+- Context-based answering

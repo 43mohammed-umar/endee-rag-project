@@ -1,54 +1,51 @@
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+import PyPDF2
 from sentence_transformers import SentenceTransformer
-import numpy as np
+from endee_db import store_embeddings, search_embeddings
 
-# Load embedding model
+# Load model
 model = SentenceTransformer("all-MiniLM-L6-v2")
-# STEP 1: Process PDF
-=======
 
-#  STEP 1: Process PDF
+
 def process_pdf(file_path):
-    loader = PyPDFLoader(file_path)
-    documents = loader.load()
+    texts = []
 
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500,
-        chunk_overlap=50
-    )
+    # Read PDF manually (no LangChain)
+    with open(file_path, "rb") as file:
+        reader = PyPDF2.PdfReader(file)
 
-    texts = text_splitter.split_documents(documents)
-    texts = [doc.page_content for doc in texts]
+        for page in reader.pages:
+            text = page.extract_text()
+            if text:
+                texts.append(text)
 
-    embeddings = model.encode(texts)
-
-    return texts, embeddings
-
-# --STEP 2: SMART ANSWER SYSTEM 
-#  STEP 2: SMART ANSWER SYSTEM
-def get_answer(question, texts, embeddings):
-
-    # 1. KEYWORD BASED SEARCH (STRONG FIX)
-    keywords = question.lower().split()
-
-    keyword_hits = []
+    # Simple chunking
+    chunks = []
     for text in texts:
-        if any(word in text.lower() for word in keywords):
-            keyword_hits.append(text)
+        for i in range(0, len(text), 200):
+            chunks.append(text[i:i+200])
 
-    # If strong keyword match found → return directly
-    if keyword_hits:
-        return [("🔍 Exact Match:\n" + keyword_hits[0], 1.0)]
+    embeddings = model.encode(chunks)
+
+    store_embeddings(chunks, embeddings)
+
+    return chunks
 
 
-    # 2. FALLBACK TO SEMANTIC SEARCH
-    # FALLBACK TO SEMANTIC SEARCH
+def get_answer(question, texts):
     query_embedding = model.encode([question])[0]
-    similarities = np.dot(embeddings, query_embedding)
 
-    top_indices = np.argsort(similarities)[-3:][::-1]
+    results = search_embeddings(query_embedding)
 
-    results = [(texts[i], similarities[i]) for i in top_indices]
+    if not results:
+        return "No relevant answer found."
 
-    return results
+    context = " ".join([text for text, _ in results])
+
+    question_words = question.lower().split()
+    sentences = context.split(".")
+
+    for sentence in sentences:
+        if any(word in sentence.lower() for word in question_words):
+            return sentence.strip()
+
+    return context[:200]
