@@ -5,8 +5,10 @@ import numpy as np
 
 # Load embedding model
 model = SentenceTransformer("all-MiniLM-L6-v2")
-
 # STEP 1: Process PDF
+=======
+
+#  STEP 1: Process PDF
 def process_pdf(file_path):
     loader = PyPDFLoader(file_path)
     documents = loader.load()
@@ -23,8 +25,8 @@ def process_pdf(file_path):
 
     return texts, embeddings
 
-
-# --STEP 2: SMART ANSWER SYSTEM
+# --STEP 2: SMART ANSWER SYSTEM 
+#  STEP 2: SMART ANSWER SYSTEM
 def get_answer(question, texts, embeddings):
 
     # 1. KEYWORD BASED SEARCH (STRONG FIX)
@@ -39,7 +41,9 @@ def get_answer(question, texts, embeddings):
     if keyword_hits:
         return [("🔍 Exact Match:\n" + keyword_hits[0], 1.0)]
 
+
     # 2. FALLBACK TO SEMANTIC SEARCH
+    # FALLBACK TO SEMANTIC SEARCH
     query_embedding = model.encode([question])[0]
     similarities = np.dot(embeddings, query_embedding)
 
