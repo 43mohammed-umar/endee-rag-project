@@ -1,12 +1,13 @@
 import streamlit as st
 from rag_pipeline import process_pdf, get_answer
 
-st.title("AI PDF Question Answering (Endee Project)")
+st.set_page_config(page_title="Endee AI PDF QA", layout="centered")
 
-# Upload PDF
-pdf_file = st.file_uploader("Upload a PDF file", type=["pdf"])
+st.title(" AI PDF Question Answering (Endee + RAG)")
 
-if pdf_file is not None:
+pdf_file = st.file_uploader("Upload PDF", type=["pdf"])
+
+if pdf_file:
     with open("temp.pdf", "wb") as f:
         f.write(pdf_file.read())
 
@@ -14,16 +15,26 @@ if pdf_file is not None:
 
     texts = process_pdf("temp.pdf")
 
-    # Summary Feature
-    if st.button("📄 Summarize Document"):
-        st.markdown("## 📝 Summary")
-        st.write(" ".join(texts[:3]))
+    if st.button(" Summarize"):
+        if 'texts' in locals():
+            st.markdown("### 📝 Summary")
 
-    # Ask question
-    question = st.text_input("Ask a question from the document")
+            summary = " ".join(texts[:5])
+            st.write(summary[:500])
+        else:
+            st.warning("Please upload a PDF first.")
+
+    question = st.text_input("Ask your question")
+
+    if st.button("Get Answer"):
+        if question:
+            answer = get_answer(question)
+            st.markdown("### Answer")
+            st.write(answer)
 
     if question:
-        answer = get_answer(question, texts)
+        st.write("Processing question...")  # DEBUG
+        answer = get_answer(question)
 
-        st.markdown("## Answer")
+        st.markdown("### Answer")
         st.write(answer)
